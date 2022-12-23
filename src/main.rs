@@ -1,9 +1,11 @@
 mod day1;
 mod day2;
+mod day3;
 
 fn main() -> std::io::Result<()> {
     day1::main()?;
     day2::main()?;
+    day3::main()?;
     Ok(())
 }
 
@@ -20,9 +22,9 @@ mod main {
             pub fn main() -> std::io::Result<()> {
                 println!("day {}: ", $day_num);
                 let mut input = crate::main::get_file($day_num)?;
-                main_0(&mut input);
+                main_0(&mut input)?;
                 input.rewind().unwrap();
-                main_1(&mut input);
+                main_1(&mut input)?;
                 Ok(())
             }
         };

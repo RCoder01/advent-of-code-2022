@@ -4,48 +4,40 @@ use std::{io::{BufRead, Seek, BufReader}, fs::File};
 crate::main!(1);
 
 
-fn main_0(input: &mut BufReader<File>) {
-    let mut line = String::new();
+fn main_0(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
     let mut current_sum = 0;
     let mut max_sum = 0;
-    while let Ok(len) = input.read_line(&mut line) {
-        match len {
-            0 => {
-                println!("part 1: {}", if current_sum > max_sum {current_sum} else {max_sum});
-                return;
-            },
-            1..=2 => {
+    for line in input.lines() {
+        match line?.as_str() {
+            "" => {
                 max_sum = if current_sum > max_sum {current_sum} else {max_sum};
                 current_sum = 0;
             },
-            _ => {
-                current_sum += line.trim_end().parse::<i32>().unwrap();
+            num => {
+                current_sum += num.parse::<i32>().unwrap();
             }
         }
-        line.clear();
-    }
+    };
+    println!("part 1: {}", if current_sum > max_sum {current_sum} else {max_sum});
+    Ok(())
 }
 
 
-fn main_1(input: &mut BufReader<File>) {
-    let mut line = String::new();
+fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
     let mut current_sum = 0;
     let mut sums = Vec::new();
-    while let Ok(len) = input.read_line(&mut line) {
-        match len {
-            0 => {
-                sums.sort_unstable();
-                println!("part 2: {}", sums.iter().rev().take(3).sum::<i32>());
-                return;
-            },
-            1..=2 => {
+    for line in input.lines() {
+        match line?.as_str() {
+            "" => {
                 sums.push(current_sum);
                 current_sum = 0;
             },
-            _ => {
-                current_sum += line.trim_end().parse::<i32>().unwrap();
+            num => {
+                current_sum += num.parse::<i32>().unwrap();
             }
         }
-        line.clear();
     }
+    sums.sort_unstable();
+    println!("part 2: {}", sums.iter().rev().take(3).sum::<i32>());
+    Ok(())
 }
