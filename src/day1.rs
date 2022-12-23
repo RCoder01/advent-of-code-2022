@@ -1,17 +1,10 @@
-use std::io::{BufRead, Seek};
+use std::{io::{BufRead, Seek, BufReader}, fs::File};
 
 
-pub fn main() -> std::io::Result<()> {
-    println!("day 1:");
-    let mut input = crate::main::get_file(1)?;
-    main_0(&mut input);
-    input.rewind().unwrap();
-    main_1(&mut input);
-    Ok(())
-}
+crate::main!(1);
 
 
-pub fn main_0(input: &mut std::io::BufReader<std::fs::File>) {
+fn main_0(input: &mut BufReader<File>) {
     let mut line = String::new();
     let mut current_sum = 0;
     let mut max_sum = 0;
@@ -34,7 +27,7 @@ pub fn main_0(input: &mut std::io::BufReader<std::fs::File>) {
 }
 
 
-pub fn main_1(input: &mut std::io::BufReader<std::fs::File>) {
+fn main_1(input: &mut BufReader<File>) {
     let mut line = String::new();
     let mut current_sum = 0;
     let mut sums = Vec::new();
