@@ -24,8 +24,11 @@ fn main() -> std::io::Result<()> {
 mod main {
     use std::{fs::File, io::{BufReader, Error}};
     
-    pub fn get_file(day_num: i8, test: bool) -> Result<std::io::BufReader<std::fs::File>, Error> {
-        Ok(BufReader::new(File::open(format!("data/day{day_num}{}.txt", if test {"_test"} else {""}).trim_end())?))
+    pub fn get_file(day_num: i8, test: Option<u32>) -> Result<std::io::BufReader<std::fs::File>, Error> {
+        Ok(BufReader::new(File::open(format!(
+            "data/day{day_num}{}.txt",
+            if let Some(index) = test {format!("_test{index}")} else {String::new()}
+        ).trim_end())?))
     }
 
     #[macro_export]
@@ -33,16 +36,16 @@ mod main {
         ($day_num: expr) => {
             pub fn main() -> std::io::Result<()> {
                 println!("day {}: ", $day_num);
-                let mut input = crate::main::get_file($day_num, false)?;
+                let mut input = crate::main::get_file($day_num, None)?;
                 main_0(&mut input)?;
                 input.rewind().unwrap();
                 main_1(&mut input)?;
                 Ok(())
             }
 
-            pub fn test() -> std::io::Result<()> {
+            pub fn test(index: u32) -> std::io::Result<()> {
                 println!("day {}: ", $day_num);
-                let mut input = crate::main::get_file($day_num, true)?;
+                let mut input = crate::main::get_file($day_num, Some(index))?;
                 main_0(&mut input)?;
                 input.rewind().unwrap();
                 main_1(&mut input)?;
