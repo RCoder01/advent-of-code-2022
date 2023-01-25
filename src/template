@@ -1,0 +1,12 @@
+use std::{io::{Seek, BufReader, BufRead}, fs::File};
+
+
+crate::main!();
+
+fn main_0(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
+    Ok(())
+}
+
+fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
+    Ok(())
+}

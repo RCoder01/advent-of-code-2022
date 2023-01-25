@@ -13,7 +13,7 @@ fn main_0(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
             stack_lines.pop();
             break;
         }
-        stack_lines.push(std::mem::replace(&mut line, String::new()));
+        stack_lines.push(std::mem::take(&mut line));
     }
     for line in stack_lines.iter().rev() {
         let line = line.trim_end().as_bytes().iter().skip(1).step_by(4).enumerate();
@@ -25,7 +25,7 @@ fn main_0(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
     }
     for line in input.lines() {
         let nums: Vec<_> = line?.split(' ').skip(1).step_by(2).map(|int| int.parse::<usize>().unwrap() - 1).collect();
-        for i in 0..=nums[0] {
+        for _ in 0..=nums[0] {
             let source = stacks[nums[1]].pop().unwrap();
             stacks[nums[2]].push(source);
         }
@@ -45,7 +45,7 @@ fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
             stack_lines.pop();
             break;
         }
-        stack_lines.push(std::mem::replace(&mut line, String::new()));
+        stack_lines.push(std::mem::take(&mut line));
     }
     for line in stack_lines.iter().rev() {
         let line = line.trim_end().as_bytes().iter().skip(1).step_by(4).enumerate();

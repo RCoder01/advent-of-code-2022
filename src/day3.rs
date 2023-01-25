@@ -39,7 +39,7 @@ fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
                     .trim_end()
                     .as_bytes()
                     .iter()
-                    .map(|i| *i)
+                    .cloned()
                     .collect::<BTreeSet<_>>())
                 .fold(
                     BTreeSet::new(),
@@ -47,7 +47,7 @@ fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
                         if accum.is_empty() {item} else {accum
                             .intersection(&item)
                             .into_iter()
-                            .map(|i| *i)
+                            .cloned()
                             .collect()})
                 .into_iter()
                 .next()
@@ -65,7 +65,7 @@ fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
         }
         let len = input.read_line(&mut line)?;
         if len == 0 {break;}
-        lines.push(std::mem::replace(&mut line, String::new()));
+        lines.push(std::mem::take(&mut line));
     }
     println!("part 2: {priority}");
     Ok(())

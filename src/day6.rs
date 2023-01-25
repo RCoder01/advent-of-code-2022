@@ -7,7 +7,7 @@ crate::main!(6);
 fn main_0(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
     let mut line = String::new();
     input.read_line(&mut line)?;
-    let mut iter = line.as_bytes().iter().enumerate();
+    let iter = line.as_bytes().iter().enumerate();
     let mut last = VecDeque::new();
     for (index, char) in iter {
         if last.len() < 3 {
@@ -29,7 +29,7 @@ fn main_0(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
 fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
     let mut line = String::new();
     input.read_line(&mut line)?;
-    let mut iter = line.as_bytes().iter().enumerate();
+    let iter = line.as_bytes().iter().enumerate();
     let mut last = VecDeque::new();
     for (index, char) in iter {
         if last.len() < 13 {

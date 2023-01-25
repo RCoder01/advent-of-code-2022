@@ -23,6 +23,7 @@ fn main() -> std::io::Result<()> {
     Ok(())
 }
 
+
 mod main {
     use std::{fs::File, io::{BufReader, Error}};
     
@@ -38,7 +39,7 @@ mod main {
         ($day_num: expr) => {
             pub fn main() -> std::io::Result<()> {
                 println!("day {}: ", $day_num);
-                let mut input = crate::main::get_file($day_num, None)?;
+                let mut input = $crate::main::get_file($day_num, None)?;
                 main_0(&mut input)?;
                 input.rewind().unwrap();
                 main_1(&mut input)?;
@@ -47,7 +48,7 @@ mod main {
 
             pub fn test(index: u32) -> std::io::Result<()> {
                 println!("day {}: ", $day_num);
-                let mut input = crate::main::get_file($day_num, Some(index))?;
+                let mut input = $crate::main::get_file($day_num, Some(index))?;
                 main_0(&mut input)?;
                 input.rewind().unwrap();
                 main_1(&mut input)?;

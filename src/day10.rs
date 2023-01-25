@@ -31,7 +31,7 @@ const ONE_OFF: RangeInclusive<i32> = -2..=0;
 fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
     let mut screen = Vec::new();
     let mut render = |cpu: &CPU| screen.push(ONE_OFF.contains(&(cpu.register - (cpu.cycle % 40) as i32)));
-    let mut cpu = CallbackCPU::new((1..=240).into_iter(), &mut render);
+    let mut cpu = CallbackCPU::new(1..=240, &mut render);
     for line in input.lines() {
         let line = line?;
         let mut instruction = line.split(' ');
@@ -43,13 +43,13 @@ fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
                 cpu.advance(1);
             },
             _ => {
-                panic!();
+                panic!("Unknown instruction");
             }
         }
     }
     for (index, enabled) in screen.iter().enumerate() {
         if index % 40 == 0 {
-            println!("");
+            println!();
         }
         print!("{}", if *enabled {"#"} else {"."});
     }
@@ -66,10 +66,6 @@ struct CPU {
 impl CPU {
     fn new() -> Self {
         Self { cycle: 0, register: 1 }
-    }
-
-    fn advance(&mut self, cycles: u32) {
-        self.cycle += cycles;
     }
 
     fn addx(&mut self, delta: i32) {
@@ -90,7 +86,7 @@ impl<T: Iterator<Item = u32> + Debug> Debug for CallbackCPU<'_, T> {
 }
 
 impl<T: Iterator<Item = u32>> CallbackCPU<'_, T> {
-    fn new<'a>(signals: T, callback: &'a mut dyn FnMut(&CPU)) -> CallbackCPU<'a, T> {
+    fn new(signals: T, callback: &'_ mut dyn FnMut(&CPU)) -> CallbackCPU<T> {
         CallbackCPU { cpu: CPU::new(), signals: signals.peekable(), callback }
     }
 

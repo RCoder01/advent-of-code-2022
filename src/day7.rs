@@ -21,7 +21,8 @@ fn main_0(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
                             subdir_name => Some(subdir_name)
                         }).expect("Nonexistant subdir");
                     },
-                    "ls" | _ => {},
+                    "ls" => {},
+                    _ => panic!("Invalid command"),
                 }
             },
             "dir" => {
@@ -65,7 +66,8 @@ fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
                             subdir_name => Some(subdir_name)
                         }).expect("Nonexistant subdir");
                     },
-                    "ls" | _ => {},
+                    "ls" => {},
+                    _ => panic!("Invalid command"),
                 }
             },
             "dir" => {
@@ -137,7 +139,7 @@ impl Directory {
     }
 
     fn get_subdir(&mut self, indices: &[usize]) -> &mut Directory {
-        if indices.len() == 0 {
+        if indices.is_empty() {
             return self;
         }
         self.subdirs[indices[0]].get_subdir(&indices[1..])
@@ -177,7 +179,7 @@ impl<'a> DirectoryNavigator<'a> {
     }
 
     fn next_dir(&mut self) -> Result<(), DirectoryError> {
-        if self.get_dir().subdirs.len() > 0 {
+        if !self.get_dir().subdirs.is_empty() {
             self.location.push(0);
             return Ok(());
         }
