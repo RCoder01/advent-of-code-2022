@@ -1,8 +1,12 @@
-use std::{io::{Seek, BufReader, BufRead}, fs::File, collections::BTreeSet, ops::{Add, AddAssign, Sub, SubAssign}, fmt::Debug};
-
+use std::{
+    collections::BTreeSet,
+    fmt::Debug,
+    fs::File,
+    io::{BufRead, BufReader, Seek},
+    ops::{Add, AddAssign, Sub, SubAssign},
+};
 
 crate::main!(9);
-
 
 fn main_0(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
     let mut rope = Rope::new(2, Position::default());
@@ -12,21 +16,20 @@ fn main_0(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
         let line = line?;
         let mut words = line.split(' ');
         let direction = match words.next().unwrap() {
-            "U" => {Direction::Up},
-            "D" => {Direction::Down},
-            "L" => {Direction::Left},
-            "R" => {Direction::Right},
-            _ => panic!()
+            "U" => Direction::Up,
+            "D" => Direction::Down,
+            "L" => Direction::Left,
+            "R" => Direction::Right,
+            _ => panic!(),
         };
         for _ in 0..words.next().unwrap().parse::<i32>().unwrap() {
             rope.push(direction);
             positions.insert(rope.tail());
         }
-    };
+    }
     println!("part 1: {}", positions.len());
     Ok(())
 }
-
 
 fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
     let mut rope = Rope::new(10, Position::default());
@@ -36,26 +39,24 @@ fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
         let line = line?;
         let mut words = line.split(' ');
         let direction = match words.next().unwrap() {
-            "U" => {Direction::Up},
-            "D" => {Direction::Down},
-            "L" => {Direction::Left},
-            "R" => {Direction::Right},
-            _ => panic!()
+            "U" => Direction::Up,
+            "D" => Direction::Down,
+            "L" => Direction::Left,
+            "R" => Direction::Right,
+            _ => panic!(),
         };
         for _ in 0..words.next().unwrap().parse::<i32>().unwrap() {
             rope.push(direction);
             positions.insert(rope.tail());
         }
-    };
+    }
     println!("part 2: {}", positions.len());
     Ok(())
 }
 
-
 trait Movable {
     fn push(&mut self, direction: Direction);
 }
-
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 enum Direction {
@@ -78,20 +79,20 @@ struct Position {
 
 impl Position {
     fn new(x: i32, y: i32) -> Self {
-        Self {x, y}
+        Self { x, y }
     }
 
     fn direction(&self) -> Direction {
         match self {
-            Position {x:     0, y:   1..} => Direction::Up,
-            Position {x:   1.., y:   1..} => Direction::UpRight,
-            Position {x:   1.., y:     0} => Direction::Right,
-            Position {x:   1.., y: ..=-1} => Direction::DownRight,
-            Position {x:     0, y: ..=-1} => Direction::Down,
-            Position {x: ..=-1, y: ..=-1} => Direction::DownLeft,
-            Position {x: ..=-1, y:     0} => Direction::Left,
-            Position {x: ..=-1, y:   1..} => Direction::UpLeft,
-            Position {x:     0, y:     0} => Direction::Center,
+            Position { x: 0, y: 1.. } => Direction::Up,
+            Position { x: 1.., y: 1.. } => Direction::UpRight,
+            Position { x: 1.., y: 0 } => Direction::Right,
+            Position { x: 1.., y: ..=-1 } => Direction::DownRight,
+            Position { x: 0, y: ..=-1 } => Direction::Down,
+            Position { x: ..=-1, y: ..=-1 } => Direction::DownLeft,
+            Position { x: ..=-1, y: 0 } => Direction::Left,
+            Position { x: ..=-1, y: 1.. } => Direction::UpLeft,
+            Position { x: 0, y: 0 } => Direction::Center,
         }
     }
 }
@@ -106,7 +107,10 @@ impl Add for Position {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self::Output {
-        Position { x: self.x + rhs.x, y: self.y + rhs.y }
+        Position {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
     }
 }
 
@@ -144,7 +148,8 @@ impl Movable for Position {
             Direction::DownLeft => (-1, -1),
             Direction::DownRight => (1, -1),
             Direction::Center => (0, 0),
-        }.into();
+        }
+        .into();
     }
 }
 
@@ -154,17 +159,12 @@ enum Rope {
     Knot(Position),
 }
 
-
 impl Rope {
     fn new(num_knots: u32, position: Position) -> Self {
         match num_knots {
             0 => panic!(),
-            1 => {
-                Self::Knot(position)
-            },
-            count => {
-                Self::Link(position, Box::new(Rope::new(count - 1, position)))
-            }
+            1 => Self::Knot(position),
+            count => Self::Link(position, Box::new(Rope::new(count - 1, position))),
         }
     }
 
@@ -209,25 +209,19 @@ impl Movable for Rope {
                     (Direction::DownRight, Direction::DownLeft) => Direction::Down,
                     (Direction::DownLeft, Direction::UpLeft) => Direction::Left,
                     (Direction::DownLeft, Direction::DownRight) => Direction::Down,
-                       (Direction::UpLeft,
-                           Direction::Up
-                         | Direction::UpLeft
-                         | Direction::Left)
-                     | (Direction::UpRight,
-                           Direction::Up
-                         | Direction::UpRight
-                         | Direction::Right)
-                     | (Direction::DownLeft,
-                           Direction::Down
-                         | Direction::DownLeft
-                         | Direction::Left)
-                     | (Direction::DownRight,
-                           Direction::Down
-                         | Direction::DownRight
-                         | Direction::Right) => direction,
+                    (Direction::UpLeft, Direction::Up | Direction::UpLeft | Direction::Left)
+                    | (Direction::UpRight, Direction::Up | Direction::UpRight | Direction::Right)
+                    | (
+                        Direction::DownLeft,
+                        Direction::Down | Direction::DownLeft | Direction::Left,
+                    )
+                    | (
+                        Direction::DownRight,
+                        Direction::Down | Direction::DownRight | Direction::Right,
+                    ) => direction,
                     _ => Direction::Center,
                 });
-            },
+            }
             Rope::Knot(knot) => knot.push(direction),
         }
     }

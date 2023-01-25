@@ -1,5 +1,7 @@
-use std::{io::{Seek, BufReader, BufRead}, fs::File};
-
+use std::{
+    fs::File,
+    io::{BufRead, BufReader, Seek},
+};
 
 crate::main!(8);
 
@@ -47,7 +49,13 @@ fn main_0(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
             }
         }
     }
-    println!{"part 1: {}", visible.into_iter().map(|r| r.into_iter().map(|b| b as u16).sum::<u16>()).sum::<u16>()};
+    println!(
+        "part 1: {}",
+        visible
+            .into_iter()
+            .map(|r| r.into_iter().map(|b| b as u16).sum::<u16>())
+            .sum::<u16>()
+    );
     Ok(())
 }
 
@@ -60,7 +68,7 @@ fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
         trees.push(line.as_bytes().iter().map(|b| b - 48).collect::<Vec<u8>>());
         scenic_score.push(vec![1; line.len()]);
     }
-    
+
     for (tree_row, scenic_row) in trees.iter().zip(scenic_score.iter_mut()) {
         let mut left = ViewDistance::new();
         for (index, (score, tree)) in scenic_row.iter_mut().zip(tree_row.iter()).enumerate() {
@@ -71,7 +79,12 @@ fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
             left.set(*tree, index);
         }
         let mut right = ViewDistance::new();
-        for (index, (score, tree)) in scenic_row.iter_mut().rev().zip(tree_row.iter().rev()).enumerate() {
+        for (index, (score, tree)) in scenic_row
+            .iter_mut()
+            .rev()
+            .zip(tree_row.iter().rev())
+            .enumerate()
+        {
             *score *= match right.get(*tree) {
                 None => index,
                 Some(found) => index - found,
@@ -82,7 +95,8 @@ fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
 
     for i in 0..trees.first().unwrap().len() {
         let mut top = ViewDistance::new();
-        for (index, (tree_row, scenic_row)) in trees.iter().zip(scenic_score.iter_mut()).enumerate() {
+        for (index, (tree_row, scenic_row)) in trees.iter().zip(scenic_score.iter_mut()).enumerate()
+        {
             scenic_row[i] *= match top.get(tree_row[i]) {
                 None => index,
                 Some(found) => index - found,
@@ -90,7 +104,12 @@ fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
             top.set(tree_row[i], index);
         }
         let mut bottom = ViewDistance::new();
-        for (index, (tree_row, scenic_row)) in trees.iter().rev().zip(scenic_score.iter_mut().rev()).enumerate() {
+        for (index, (tree_row, scenic_row)) in trees
+            .iter()
+            .rev()
+            .zip(scenic_score.iter_mut().rev())
+            .enumerate()
+        {
             scenic_row[i] *= match bottom.get(tree_row[i]) {
                 None => index,
                 Some(found) => index - found,
@@ -99,7 +118,14 @@ fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
         }
     }
 
-    println!("part 2: {}", scenic_score.iter().map(|v| v.iter().max().unwrap()).max().unwrap());
+    println!(
+        "part 2: {}",
+        scenic_score
+            .iter()
+            .map(|v| v.iter().max().unwrap())
+            .max()
+            .unwrap()
+    );
     Ok(())
 }
 
@@ -110,7 +136,7 @@ struct ViewDistance {
 
 impl ViewDistance {
     fn new() -> Self {
-        Self {history: [0; 10]}
+        Self { history: [0; 10] }
     }
 
     fn get(&self, height: u8) -> Option<usize> {

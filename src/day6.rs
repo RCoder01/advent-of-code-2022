@@ -1,8 +1,10 @@
-use std::{io::{Seek, BufReader, BufRead}, fs::File, collections::VecDeque};
-
+use std::{
+    collections::VecDeque,
+    fs::File,
+    io::{BufRead, BufReader, Seek},
+};
 
 crate::main!(6);
-
 
 fn main_0(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
     let mut line = String::new();
@@ -16,7 +18,10 @@ fn main_0(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
         }
         last.push_back(*char);
         // dbg!{&last, char};
-        if !last.iter().any(|c| last.iter().map(|d| (*d == *c) as u8).sum::<u8>() >= 2) {
+        if !last
+            .iter()
+            .any(|c| last.iter().map(|d| (*d == *c) as u8).sum::<u8>() >= 2)
+        {
             println!("part 1: {}", index + 1);
             break;
         }
@@ -24,7 +29,6 @@ fn main_0(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
     }
     Ok(())
 }
-
 
 fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
     let mut line = String::new();
@@ -38,7 +42,10 @@ fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
         }
         last.push_back(*char);
         // dbg!{&last, char};
-        if !last.iter().any(|c| last.iter().map(|d| (*d == *c) as u8).sum::<u8>() >= 2) {
+        if !last
+            .iter()
+            .any(|c| last.iter().map(|d| (*d == *c) as u8).sum::<u8>() >= 2)
+        {
             println!("part 1: {}", index + 1);
             break;
         }

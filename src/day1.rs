@@ -1,8 +1,9 @@
-use std::{io::{BufRead, Seek, BufReader}, fs::File};
-
+use std::{
+    fs::File,
+    io::{BufRead, BufReader, Seek},
+};
 
 crate::main!(1);
-
 
 fn main_0(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
     let mut current_sum = 0;
@@ -10,18 +11,28 @@ fn main_0(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
     for line in input.lines() {
         match line?.as_str() {
             "" => {
-                max_sum = if current_sum > max_sum {current_sum} else {max_sum};
+                max_sum = if current_sum > max_sum {
+                    current_sum
+                } else {
+                    max_sum
+                };
                 current_sum = 0;
-            },
+            }
             num => {
-                current_sum += num.parse::<i32>().unwrap();
+                current_sum += num.parse::<i32>().expect("Expected numbers");
             }
         }
-    };
-    println!("part 1: {}", if current_sum > max_sum {current_sum} else {max_sum});
+    }
+    println!(
+        "part 1: {}",
+        if current_sum > max_sum {
+            current_sum
+        } else {
+            max_sum
+        }
+    );
     Ok(())
 }
-
 
 fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
     let mut current_sum = 0;
@@ -31,9 +42,9 @@ fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
             "" => {
                 sums.push(current_sum);
                 current_sum = 0;
-            },
+            }
             num => {
-                current_sum += num.parse::<i32>().unwrap();
+                current_sum += num.parse::<i32>().expect("Expected numbers");
             }
         }
     }

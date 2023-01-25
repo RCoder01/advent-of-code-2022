@@ -1,8 +1,10 @@
-use std::{io::{Seek, BufReader, BufRead}, fs::File, collections::BTreeSet};
-
+use std::{
+    collections::BTreeSet,
+    fs::File,
+    io::{BufRead, BufReader, Seek},
+};
 
 crate::main!(7);
-
 
 fn main_0(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
     let mut fs = Directory::new("/".to_owned());
@@ -11,28 +13,31 @@ fn main_0(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
         let line = line?;
         let mut words = line.split(' ');
         match words.next().unwrap() {
-            "$" => {
-                match words.next().unwrap() {
-                    "cd" => {
-                        let name = words.next().unwrap();
-                        nav.chdir(match name {
-                            "/" => continue,
-                            ".." => None,
-                            subdir_name => Some(subdir_name)
-                        }).expect("Nonexistant subdir");
-                    },
-                    "ls" => {},
-                    _ => panic!("Invalid command"),
+            "$" => match words.next().unwrap() {
+                "cd" => {
+                    let name = words.next().unwrap();
+                    nav.chdir(match name {
+                        "/" => continue,
+                        ".." => None,
+                        subdir_name => Some(subdir_name),
+                    })
+                    .expect("Nonexistant subdir");
                 }
+                "ls" => {}
+                _ => panic!("Invalid command"),
             },
             "dir" => {
                 let name = words.next().unwrap();
-                nav.get_dir().create_subdir(name.to_string()).expect("Duplicate subdirectories");
-            },
+                nav.get_dir()
+                    .create_subdir(name.to_string())
+                    .expect("Duplicate subdirectories");
+            }
             int => {
                 let name = words.next().unwrap();
                 let size = int.parse().unwrap();
-                nav.get_dir().add_file(name.to_owned(), size).expect("Duplicate files");
+                nav.get_dir()
+                    .add_file(name.to_owned(), size)
+                    .expect("Duplicate files");
             }
         };
     }
@@ -48,7 +53,6 @@ fn main_0(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
     Ok(())
 }
 
-
 fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
     let mut fs = Directory::new("/".to_owned());
     let mut nav = DirectoryNavigator::new(&mut fs);
@@ -56,28 +60,31 @@ fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
         let line = line?;
         let mut words = line.split(' ');
         match words.next().unwrap() {
-            "$" => {
-                match words.next().unwrap() {
-                    "cd" => {
-                        let name = words.next().unwrap();
-                        nav.chdir(match name {
-                            "/" => continue,
-                            ".." => None,
-                            subdir_name => Some(subdir_name)
-                        }).expect("Nonexistant subdir");
-                    },
-                    "ls" => {},
-                    _ => panic!("Invalid command"),
+            "$" => match words.next().unwrap() {
+                "cd" => {
+                    let name = words.next().unwrap();
+                    nav.chdir(match name {
+                        "/" => continue,
+                        ".." => None,
+                        subdir_name => Some(subdir_name),
+                    })
+                    .expect("Nonexistant subdir");
                 }
+                "ls" => {}
+                _ => panic!("Invalid command"),
             },
             "dir" => {
                 let name = words.next().unwrap();
-                nav.get_dir().create_subdir(name.to_string()).expect("Duplicate subdirectories");
-            },
+                nav.get_dir()
+                    .create_subdir(name.to_string())
+                    .expect("Duplicate subdirectories");
+            }
             int => {
                 let name = words.next().unwrap();
                 let size = int.parse().unwrap();
-                nav.get_dir().add_file(name.to_owned(), size).expect("Duplicate files");
+                nav.get_dir()
+                    .add_file(name.to_owned(), size)
+                    .expect("Duplicate files");
             }
         };
     }
@@ -95,10 +102,8 @@ fn main_1(input: &mut BufReader<File>) -> Result<(), std::io::Error> {
     Ok(())
 }
 
-
 #[derive(Debug)]
 struct DirectoryError;
-
 
 #[derive(Debug)]
 struct Directory {
@@ -110,7 +115,12 @@ struct Directory {
 
 impl Directory {
     fn new(name: String) -> Self {
-        Directory {name, files: BTreeSet::new(), local_size: 0, subdirs: Vec::new()}
+        Directory {
+            name,
+            files: BTreeSet::new(),
+            local_size: 0,
+            subdirs: Vec::new(),
+        }
     }
 
     fn add_file(&mut self, str: String, size: i32) -> Result<(), DirectoryError> {
@@ -121,7 +131,7 @@ impl Directory {
         self.files.insert(str);
         Ok(())
     }
-    
+
     fn create_subdir(&mut self, name: String) -> Result<(), DirectoryError> {
         if self.subdirs.iter().any(|dir| dir.name == name) {
             return Err(DirectoryError);
@@ -146,17 +156,18 @@ impl Directory {
     }
 }
 
-
 #[derive(Debug)]
 struct DirectoryNavigator<'a> {
     fs: &'a mut Directory,
     location: Vec<usize>,
 }
 
-
 impl<'a> DirectoryNavigator<'a> {
     fn new(fs: &'a mut Directory) -> Self {
-        Self {fs, location: Vec::new()}
+        Self {
+            fs,
+            location: Vec::new(),
+        }
     }
 
     fn chdir(&mut self, subdir_name: Option<&str>) -> Result<(), DirectoryError> {
@@ -167,7 +178,7 @@ impl<'a> DirectoryNavigator<'a> {
                     return Ok(());
                 }
             }
-            return Err(DirectoryError)
+            return Err(DirectoryError);
         } else {
             self.location.pop();
         }
